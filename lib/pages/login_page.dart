@@ -1,17 +1,72 @@
 import 'package:assignment/components/button.dart';
 import 'package:assignment/components/square_tile.dart';
 import 'package:assignment/components/text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   // Text editing controllers
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+
   final passwordController = TextEditingController();
 
   // Sign in
-  void signUserIn() {}
+  void signUserIn() async {
+    // Loading dialog box
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: CircularProgressIndicator(color: Colors.grey.shade900),
+          );
+        });
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+      if (e.code == 'invalid-email') {
+        wrongEmailMessage();
+      } else if (e.code == 'invalid-credential') {
+        wrongPasswordMessage();
+      }
+    }
+  }
+
+  // Wrong email dialog
+  void wrongEmailMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const AlertDialog(
+          title: Text('Incorrect Email.'),
+        );
+      },
+    );
+  }
+
+  // Wrong password dialog
+  void wrongPasswordMessage() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return const AlertDialog(
+          title: Text('Incorrect Password.'),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +97,10 @@ class LoginPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 25),
 
-                // Username text field
+                // Email text field
                 MyTextField(
-                  controller: usernameController,
-                  hintText: 'Username',
+                  controller: emailController,
+                  hintText: 'Email',
                   obscureText: false,
                 ),
                 const SizedBox(height: 15),
