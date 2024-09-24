@@ -44,7 +44,7 @@ class _HomepageState extends State<Homepage> {
             TextButton(
               onPressed: () => _onItemTapped(0),
               child: Padding(
-                padding: const EdgeInsets.only(left: 20.0, right: 30.0),
+                padding: const EdgeInsets.only(left: 0.0, right: 30.0),
                 child: Text(
                   'Home',
                   style: TextStyle(
