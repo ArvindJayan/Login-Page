@@ -1,4 +1,5 @@
 import 'package:assignment/components/button.dart';
+import 'package:assignment/components/square_tile.dart';
 import 'package:assignment/components/text_field.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ class LoginPage extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 50),
               const Icon(
@@ -29,7 +31,7 @@ class LoginPage extends StatelessWidget {
 
               // Welcome message
               Text(
-                'Welcome back! You\'ve been missed',
+                'Welcome back! We missed you!',
                 style: TextStyle(
                   color: Colors.grey[800],
                   fontSize: 16,
@@ -71,8 +73,63 @@ class LoginPage extends StatelessWidget {
 
               // Sign-in button
               MyButton(onTap: signUserIn),
+              const SizedBox(height: 60),
+
+              // Or continue with
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Divider(
+                        thickness: 0.5,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Text(
+                        'Or continue with',
+                        style: TextStyle(color: Colors.grey.shade700),
+                      ),
+                    ),
+                    Expanded(
+                      child: Divider(
+                        thickness: 0.5,
+                        color: Colors.grey.shade400,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 50),
               // Sign in with Google
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SquareTile(
+                    imagePath: 'lib/images/google.png',
+                  ),
+                ],
+              ),
+              const SizedBox(height: 60),
               // Sign up
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Not a member?',
+                    style: TextStyle(color: Colors.grey.shade700),
+                  ),
+                  const SizedBox(width: 4.0),
+                  const Text(
+                    'Register now',
+                    style: TextStyle(
+                        color: Color.fromARGB(255, 33, 121, 243),
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
