@@ -83,4 +83,5 @@ class DefaultFirebaseOptions {
     authDomain: 'login-page-d4dd8.firebaseapp.com',
     storageBucket: 'login-page-d4dd8.appspot.com',
   );
+
 }

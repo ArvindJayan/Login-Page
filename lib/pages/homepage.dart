@@ -1,101 +1,139 @@
-import 'package:assignment/pages/company_info.dart';
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
-class Homepage extends StatefulWidget {
-  Homepage({super.key});
+class HomePage extends StatefulWidget {
+  final String currentUser;
+
+  HomePage({required this.currentUser});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _HomepageState extends State<Homepage> {
-  final user = FirebaseAuth.instance.currentUser!;
-  int _selectedIndex = 0; // 0 for Home and 1 for Company Info
+class _HomePageState extends State<HomePage> {
+  List<dynamic> movies = [];
+  bool isLoading = true;
 
-  // Sign out
-  void signUserOut() {
-    FirebaseAuth.instance.signOut();
+  @override
+  void initState() {
+    super.initState();
+    fetchMovies();
   }
 
-  // Navigate to different pages
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    if (index == 0) {
-      // Navigate to Home
-    } else if (index == 1) {
-      // Navigate to Company Info
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const CompanyInfoPage()),
-      );
+  Future<void> fetchMovies() async {
+    final url = Uri.parse('https://hoblist.com/api/movieList');
+    final response = await http.post(
+      url,
+      body: {
+        'category': 'movies',
+        'language': 'kannada',
+        'genre': 'all',
+        'sort': 'voting',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      setState(() {
+        movies = data['result'];
+        isLoading = false;
+      });
+    } else {
+      throw Exception('Failed to load movies');
     }
   }
 
-  AppBar buildAppBar() {
-    return AppBar(
-      backgroundColor: Colors.grey.shade900,
-      title: Container(
-        child: Row(
-          children: [
-            // Home button
+  // Logout the user
+  void logOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushReplacementNamed(context, '/auth'); // Redirect to auth page
+  }
+
+  void showCompanyInfo() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Company Info'),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Company: Geeksynergy Technologies Pvt Ltd'),
+              Text('Address: Sanjayanagar, Bengaluru-56'),
+              Text('Phone: XXXXXXXXX09'),
+              Text('Email: XXXXXX@gmail.com'),
+            ],
+          ),
+          actions: [
             TextButton(
-              onPressed: () => _onItemTapped(0),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 0.0, right: 30.0),
-                child: Text(
-                  'Home',
-                  style: TextStyle(
-                    color: _selectedIndex == 0 ? Colors.blue : Colors.white,
-                    fontSize: 18,
-                    fontWeight: _selectedIndex == 0
-                        ? FontWeight.bold
-                        : FontWeight.normal,
-                  ),
-                ),
-              ),
-            ),
-            // Company Info button
-            TextButton(
-              onPressed: () => _onItemTapped(1),
-              child: Text(
-                'Company Info',
-                style: TextStyle(
-                  color: _selectedIndex == 1 ? Colors.blue : Colors.white,
-                  fontSize: 18,
-                  fontWeight:
-                      _selectedIndex == 1 ? FontWeight.bold : FontWeight.normal,
-                ),
-              ),
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
           ],
-        ),
-      ),
-      actions: [
-        // Log out button
-        IconButton(
-          onPressed: signUserOut,
-          icon: const Icon(
-            Icons.logout,
-            color: Colors.white,
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
-      appBar: buildAppBar(),
-      body: const Center(
-        child: Text(
-          "Logged in.",
-          style: TextStyle(fontSize: 18),
+      appBar: AppBar(
+        title: const Text(
+          'Movies',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
+        backgroundColor: Colors.grey.shade900,
+        actions: [
+          // Logout button
+          IconButton(
+            icon: const Icon(
+              Icons.logout,
+              color: Colors.white,
+            ),
+            onPressed: logOut,
+          ),
+          PopupMenuButton<String>(
+            icon: Icon(Icons.more_vert, color: Colors.white),
+            onSelected: (String result) {
+              if (result == 'Company Info') {
+                showCompanyInfo();
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem<String>(
+                value: 'Company Info',
+                child: Text('Company Info'),
+              ),
+            ],
+          ),
+        ],
+      ),
+      body: Container(
+        color: Colors.grey.shade200,
+        child: isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : ListView.builder(
+                itemCount: movies.length,
+                itemBuilder: (context, index) {
+                  final movie = movies[index];
+                  return ListTile(
+                    title: Text(movie['title'],
+                        style: TextStyle(color: Colors.grey.shade800)),
+                    subtitle: Text('Votes: ${movie['voting']}',
+                        style: TextStyle(color: Colors.grey.shade800)),
+                  );
+                },
+              ),
       ),
     );
   }

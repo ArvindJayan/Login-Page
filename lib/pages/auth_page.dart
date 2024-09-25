@@ -1,5 +1,5 @@
 import 'package:assignment/pages/homepage.dart';
-import 'package:assignment/pages/login_page.dart';
+import 'package:assignment/pages/login_or_register_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +14,10 @@ class AuthPage extends StatelessWidget {
         builder: (context, snapshot) {
           // Checking if the user is logged in or not
           if (snapshot.hasData) {
-            return Homepage();
+            // Pass the current user to the HomePage
+            return HomePage(currentUser: snapshot.data!.email ?? 'User');
           } else {
-            return LoginPage();
+            return LoginOrRegisterPage();
           }
         },
       ),
