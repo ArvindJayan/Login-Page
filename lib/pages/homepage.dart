@@ -70,7 +70,13 @@ class _HomePageState extends State<HomePage> {
           ),
           actions: [
             TextButton(
-              child: const Text('Close'),
+              child: const Text(
+                'Close',
+                style: TextStyle(color: Colors.white),
+              ),
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.grey.shade900,
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -211,8 +217,7 @@ class _HomePageState extends State<HomePage> {
                                     child: const Text('Watch Trailer'),
                                     style: ElevatedButton.styleFrom(
                                       foregroundColor: Colors.white,
-                                      backgroundColor:
-                                          Color.fromARGB(255, 33, 114, 243),
+                                      backgroundColor: Colors.grey.shade900,
                                     ),
                                   ),
                                 ],
