@@ -126,11 +126,114 @@ class _HomePageState extends State<HomePage> {
                 itemCount: movies.length,
                 itemBuilder: (context, index) {
                   final movie = movies[index];
-                  return ListTile(
-                    title: Text(movie['title'],
-                        style: TextStyle(color: Colors.grey.shade800)),
-                    subtitle: Text('Votes: ${movie['voting']}',
-                        style: TextStyle(color: Colors.grey.shade800)),
+
+                  // Print each movie object to the console
+                  print("Movie Data: $movie");
+
+                  // Check if 'starring' exists and is not null or empty
+                  String starring = movie['starring'] != null &&
+                          movie['starring'].toString().isNotEmpty
+                      ? movie['starring']
+                      : 'N/A';
+
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Card(
+                      elevation: 3,
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Movie Poster
+                            Image.network(
+                              movie['poster'],
+                              height: 100,
+                              width: 70,
+                              fit: BoxFit.cover,
+                            ),
+                            const SizedBox(width: 10),
+                            // Movie details
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    movie['title'],
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    'Genre: ${movie['genre']}',
+                                    style:
+                                        TextStyle(color: Colors.grey.shade700),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    'Director: ${movie['director']}',
+                                    style:
+                                        TextStyle(color: Colors.grey.shade700),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    'Starring: $starring',
+                                    style:
+                                        TextStyle(color: Colors.grey.shade700),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    '${movie['duration'] != null ? '${movie['duration']} Mins' : 'N/A'} | ${movie['language']}',
+                                    style:
+                                        TextStyle(color: Colors.grey.shade700),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    '${movie['pageViews']} views | Voted by ${movie['voting']} People',
+                                    style:
+                                        TextStyle(color: Colors.grey.shade500),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 5),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // Handle Watch Trailer
+                                    },
+                                    child: const Text('Watch Trailer'),
+                                    style: ElevatedButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                      backgroundColor:
+                                          Color.fromARGB(255, 33, 114, 243),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            // Voting section
+                            Column(
+                              children: [
+                                const Icon(Icons.arrow_drop_up, size: 30),
+                                Text(
+                                  '${movie['voting']}',
+                                  style: const TextStyle(fontSize: 20),
+                                ),
+                                const Text('Votes'),
+                                const Icon(Icons.arrow_drop_down, size: 30),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   );
                 },
               ),
