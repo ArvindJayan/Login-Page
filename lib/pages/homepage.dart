@@ -52,20 +52,20 @@ class _HomePageState extends State<HomePage> {
     Navigator.pushReplacementNamed(context, '/auth'); // Redirect to auth page
   }
 
-  void showCompanyInfo() {
+  void showCreatorInfo() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Company Info'),
+          title: const Text('Creator Info'),
           content: const Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Company: Geeksynergy Technologies Pvt Ltd'),
-              Text('Address: Sanjayanagar, Bengaluru-56'),
-              Text('Phone: XXXXXXXXX09'),
-              Text('Email: XXXXXX@gmail.com'),
+              Text('Name: Arvind Jayan'),
+              Text('Address: Bengaluru, India'),
+              Text('Phone: +91 8589064433'),
+              Text('Email: jayanarvind@gmail.com'),
             ],
           ),
           actions: [
@@ -111,14 +111,14 @@ class _HomePageState extends State<HomePage> {
           PopupMenuButton<String>(
             icon: Icon(Icons.more_vert, color: Colors.white),
             onSelected: (String result) {
-              if (result == 'Company Info') {
-                showCompanyInfo();
+              if (result == 'Creator Info') {
+                showCreatorInfo();
               }
             },
             itemBuilder: (BuildContext context) => [
               const PopupMenuItem<String>(
-                value: 'Company Info',
-                child: Text('Company Info'),
+                value: 'Creator Info',
+                child: Text('Creator Info'),
               ),
             ],
           ),
